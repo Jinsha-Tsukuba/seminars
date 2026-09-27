@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第3回｜Mark Turin 公開講演会｜2026年11月6日（金）｜筑波大学</title><meta name="description" content="言語の未来を築くのは誰か。2026年11月6日（金） 16:45–18:00、対面・オンライン開催。筑波大学人文社会系公開講演会。"><meta name="theme-color" content="#6a35ce"><style>
+        @import url('https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Lato:wght@400;700&display=swap');
+        :root {
+            --tsukuba-purple: #6a35ce;
+            --tsukuba-blue: #3252aa;
+            --tsukuba-light-blue: #7a9bd1;
+            --tsukuba-accent: #ff9e1b;
+            --dark-text: #111827;
+            --light-text: #4b5563;
+            --background: #f8f9fc;
+            --light-color: #ffffff;
+            --highlight: #ffdd00;
+            --card-radius: 12px;
+            --glow-color: rgba(106, 53, 206, 0.15);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: var(--background);
+            color: var(--dark-text);
+            line-height: 1.7;
+            font-family: 'BIZ UDPGothic', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            background-image: 
+                linear-gradient(125deg, rgba(106, 53, 206, 0.05) 0%, rgba(50, 82, 170, 0.05) 100%);
+            padding-left: 0; /* Remove padding to allow dock to overlay content */
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(125deg, 
+                    rgba(106, 53, 206, 0.1) 0%, 
+                    rgba(50, 82, 170, 0.1) 25%, 
+                    rgba(122, 155, 209, 0.1) 50%, 
+                    rgba(100, 80, 190, 0.1) 75%, 
+                    rgba(106, 53, 206, 0.1) 100%);
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: vivid-gradient 20s ease infinite;
+            opacity: 0.8;
+        }
+        @keyframes vivid-gradient {
+            0% { background-position: 0% 50% }
+            50% { background-position: 100% 50% }
+            100% { background-position: 0% 50% }
+        }
+        .container {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        header {
+            background: linear-gradient(135deg, 
+                rgba(106, 53, 206, 1) 0%, 
+                rgba(90, 60, 190, 1) 20%, 
+                rgba(70, 70, 180, 1) 40%, 
+                rgba(50, 82, 170, 1) 60%, 
+                rgba(70, 70, 180, 1) 80%, 
+                rgba(106, 53, 206, 1) 100%);
+            background-size: 400% 400%;
+            color: white;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            animation: gradientMove 12s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50% }
+            50% { background-position: 100% 50% }
+            100% { background-position: 0% 50% }
+        }
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        .header-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 1;
+        }
+        .tsukuba-emblem {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50,0 L97,25 L97,75 L50,100 L3,75 L3,25 L50,0 Z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            top: 50%;
+            right: 10%;
+            transform: translateY(-50%);
+            z-index: 1;
+            opacity: 0.2;
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 span {
+            display: block;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-top: 0.8rem;
+            opacity: 0.9;
+        }
+        h2 {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--tsukuba-blue);
+            margin: 2rem 0 1rem;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+        h2::after {
+            content: '';
+            display: block;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(to right, var(--tsukuba-purple), transparent);
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+        }
+        h3 {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--tsukuba-purple);
+            margin: 1.5rem 0 1rem;
+            font-weight: 600;
+        }
+        .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+        .en-text {
+            font-family: 'Lato', sans-serif;
+        }
+        /* Split layout */
+        .split-layout {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            position: relative;
+        }
+        .split-layout::before {
+            content: '';
+            position: absolute;
+            top: 2%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 96%;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(106, 53, 206, 0.1) 10%, 
+                rgba(50, 82, 170, 0.2) 50%, 
+                rgba(106, 53, 206, 0.1) 90%, 
+                transparent 100%);
+            z-index: 1;
+        }
+        .japanese-side, .english-side {
+            flex: 0 0 50%;
+            padding: 0 2rem;
+            position: relative;
+        }
+        /* Professor profile */
+        .profile-section {
+            margin: 4rem 0;
+            position: relative;
+        }
+        .profile-image-container {
+            width: clamp(180px, 30vw, 250px);
+            height: clamp(180px, 30vw, 250px);
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            position: relative;
+            z-index: 10;
+        }
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--tsukuba-purple);
+            box-shadow: 
+                0 0 0 8px rgba(106, 53, 206, 0.1),
+                0 20px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+        .profile-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(106, 53, 206, 0.2), rgba(50, 82, 170, 0.2));
+            z-index: 2;
+        }
+        .profile-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                90deg, 
+                rgba(255, 255, 255, 0) 0%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0) 100%
+            );
+            z-index: 3;
+            animation: shimmer 3s infinite;
+            background-size: 200% 100%;
+        }
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-glow {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(106, 53, 206, 0.15) 0%, rgba(106, 53, 206, 0) 70%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            animation: pulse 4s infinite alternate ease-in-out;
+        }
+        .profile-decor {
+            position: absolute;
+            width: calc(100% + 40px);
+            height: calc(100% + 40px);
+            top: -20px;
+            left: -20px;
+            border-radius: 50%;
+            border: 1px dashed rgba(106, 53, 206, 0.3);
+            animation: rotate 30s linear infinite;
+        }
+        .profile-decor:nth-child(2) {
+            width: calc(100% + 80px);
+            height: calc(100% + 80px);
+            top: -40px;
+            left: -40px;
+            animation: rotate 45s linear infinite reverse;
+        }
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.2); opacity: 0.3; }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .profile-info-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(1rem, 4vw, 4rem);
+            margin-bottom: 3rem;
+        }
+        .profile-info-jp {
+            text-align: right;
+            flex: 1;
+            margin-right: -2rem;
+        }
+        .profile-info-en {
+            text-align: left;
+            flex: 1;
+            margin-left: -2rem;
+        }
+        .profile-name {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--tsukuba-blue);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .profile-title {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: var(--light-text);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .content-card {
+            background-color: var(--light-color);
+            border-radius: var(--card-radius);
+            box-shadow: 
+                0 10px 20px rgba(0, 0, 0, 0.02),
+                0 5px 10px rgba(0, 0, 0, 0.04);
+            padding: clamp(1rem, 5vw, 2rem);
+            margin-bottom: 2.5rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid rgba(122, 155, 209, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                var(--tsukuba-purple),
+                rgba(90, 60, 190, 1),
+                rgba(70, 70, 180, 1),
+                var(--tsukuba-blue),
+                rgba(70, 70, 180, 1),
+                rgba(90, 60, 190, 1),
+                var(--tsukuba-purple));
+            background-size: 100% 400%;
+            animation: gradientMove 8s ease infinite;
+        }
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 15px 30px rgba(0, 0, 0, 0.05),
+                0 10px 15px rgba(0, 0, 0, 0.07);
+        }
+        .content-card h2, .content-card h3 {
+            transition: transform 0.3s ease;
+        }
+        .content-card:hover h2, .content-card:hover h3 {
+            transform: translateX(5px);
+        }
+        .highlight-text {
+            background: linear-gradient(transparent 40%, var(--highlight) 40%);
+            display: inline;
+            padding: 0 3px;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .highlight-text:hover {
+            background: linear-gradient(transparent 20%, var(--highlight) 20%);
+        }
+        .abstract {
+            border-left: 4px solid var(--tsukuba-purple);
+            padding-left: 1.5rem;
+            font-style: italic;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        .details {
+            background-color: rgba(122, 155, 209, 0.05);
+            padding: clamp(1rem, 5vw, 2rem);
+            border-radius: var(--card-radius);
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .details::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, 
+                var(--tsukuba-purple),
+                rgba(90, 60, 190, 1),
+                rgba(70, 70, 180, 1),
+                var(--tsukuba-blue),
+                rgba(70, 70, 180, 1),
+                rgba(90, 60, 190, 1),
+                var(--tsukuba-purple));
+            background-size: 400% 100%;
+            animation: gradientMove 8s ease infinite;
+        }
+        .details ul {
+            list-style-type: none;
+            position: relative;
+            z-index: 1;
+        }
+        .details li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        .details li i {
+            color: var(--tsukuba-purple);
+            margin-right: 0.8rem;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .highlight {
+            color: var(--tsukuba-purple);
+            font-weight: bold;
+        }
+        .tag {
+            display: inline-block;
+            background-color: rgba(122, 155, 209, 0.1);
+            border: 1px solid rgba(122, 155, 209, 0.2);
+            color: var(--tsukuba-blue);
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.7rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .tag {
+            display: inline-block;
+            background-color: rgba(122, 155, 209, 0.1);
+            border: 1px solid rgba(122, 155, 209, 0.2);
+            color: var(--tsukuba-blue);
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.7rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent
+            );
+            transition: 0.5s;
+            z-index: -1;
+        }
+        .tag:hover {
+            background-color: var(--tsukuba-purple);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(106, 53, 206, 0.2);
+        }
+        .tag:hover::before {
+            left: 100%;
+        }
+        footer {
+            background: linear-gradient(135deg, 
+                rgba(50, 82, 170, 1) 0%, 
+                rgba(70, 70, 180, 1) 20%, 
+                rgba(90, 60, 190, 1) 40%, 
+                rgba(106, 53, 206, 1) 60%, 
+                rgba(90, 60, 190, 1) 80%, 
+                rgba(50, 82, 170, 1) 100%);
+            background-size: 400% 400%;
+            color: white;
+            padding: clamp(2rem, 5vw, 3rem) 0;
+            margin-top: 5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: gradientMove 12s ease infinite reverse;
+        }
+        .footer-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 1;
+        }
+        .footer-content {
+            position: relative;
+            z-index: 2;
+        }
+        p {
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        /* 010 */
+        .button010 a {
+            position: relative;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 0 auto;
+            max-width: 240px;
+            padding: 10px 25px;
+            color: #313131;
+            transition: 0.3s ease-in-out;
+            font-weight: 600;
+            transform: skew(-15deg);
+            color: #fff;
+            background-image: -webkit-gradient(linear, left top, right top, from(#2af598), to(#009efd));
+            background-image: -webkit-linear-gradient(left, #2af598 0%, #009efd 100%);
+            background-image: linear-gradient(90deg, #2af598 0%, #009efd 100%);
+            -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+        }
+        .button010 a:hover {
+          -webkit-transform: skew(0);
+          transform: skew(0);
+          color: #fff;
+          -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
+          box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
+        }
+        /* Mac-style Dock Menu */
+        .mac-dock {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.15),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+            z-index: 1000;
+        }
+        .dock-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .dock-item {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: linear-gradient(135deg, var(--tsukuba-purple), var(--tsukuba-blue));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            box-shadow: 
+                0 10px 20px rgba(0, 0, 0, 0.15),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .dock-divider {
+            width: 30px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 5px 0;
+        }
+        .dock-item:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 
+                0 15px 30px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+        .dock-item.active {
+            background: linear-gradient(135deg, var(--tsukuba-accent), #ffb74d);
+        }
+        .icon-text {
+            font-size: 18px;
+            position: relative;
+            z-index: 2;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            font-family: 'BIZ UDPGothic', sans-serif;
+            color: white;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .dock-tooltip {
+            position: absolute;
+            background: rgba(50, 50, 50, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            left: 75px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .dock-item:hover .dock-tooltip {
+            opacity: 1;
+            visibility: visible;
+            left: 85px;
+        }
+        /* Reflection effect for dock items */
+        .dock-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(255, 255, 255, 0.1) 100%
+            );
+            border-radius: 15px 15px 0 0;
+            z-index: 1;
+        }
+        /* Dot indicator for active item */
+        .dock-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .japanese-side, .english-side {
+                flex: 0 0 100%;
+                padding: 0 1rem;
+            }
+            .english-side {
+                border-left: none;
+                border-top: 1px solid rgba(122, 155, 209, 0.2);
+                padding-top: 2rem;
+                margin-top: 2rem;
+            }
+            .profile-info-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .profile-info-jp, .profile-info-en {
+                text-align: center;
+                margin: 0;
+            }
+            .split-layout::before {
+                width: 96%;
+                height: 2px;
+                top: 50%;
+                left: 2%;
+                background: linear-gradient(to right, 
+                    transparent 0%, 
+                    rgba(106, 53, 206, 0.1) 10%, 
+                    rgba(50, 82, 170, 0.2) 50%, 
+                    rgba(106, 53, 206, 0.1) 90%, 
+                    transparent 100%);
+            }
+        }
+        @media (max-width: 768px) {
+            body {
+                padding-left: 0;
+            }
+            .mac-dock {
+                left: 10px;
+            }
+            .dock-item {
+                width: 70px;
+                height: 70px;
+            }
+            .icon-text {
+                font-size: 16px;
+            }
+        }
+        @media (max-width: 576px) {
+            body {
+                padding-left: 0;
+                padding-bottom: 100px;
+            }
+            .container {
+                padding: 0 10px;
+            }
+            h1 {
+                padding: 0 10px;
+            }
+            .profile-section {
+                margin: 2rem 0;
+            }
+            .profile-image-container {
+                margin-bottom: 1rem;
+            }
+            .content-card, .details {
+                padding: 1.2rem;
+            }
+            .abstract {
+                padding-left: 1rem;
+            }
+            .tag {
+                padding: 0.3rem 0.7rem;
+                margin-right: 0.3rem;
+                margin-bottom: 0.5rem;
+                font-size: 0.8rem;
+            }
+            .mac-dock {
+                bottom: 20px;
+                top: auto;
+                left: 50%;
+                transform: translateX(-50%);
+                flex-direction: row;
+                padding: 10px 15px;
+                width: auto;
+                background: rgba(255, 255, 255, 0.8);
+            }
+            .dock-container {
+                flex-direction: row;
+                gap: 12px;
+            }
+            .dock-item {
+                width: 60px;
+                height: 60px;
+            }
+            .icon-text {
+                font-size: 14px;
+            }
+            .dock-divider {
+                width: 2px;
+                height: 30px;
+                margin: 0 2px;
+            }
+            .dock-tooltip {
+                left: 50%;
+                top: -40px;
+                transform: translateX(-50%);
+                background: rgba(50, 50, 50, 0.9);
+            }
+            .dock-item:hover .dock-tooltip {
+                top: -45px;
+                left: 50%;
+            }
+            .dock-item.active::after {
+                bottom: -12px;
+                left: 50%;
+            }
+        }
+    
+
+body{font-family:'Lato','BIZ UDPGothic',sans-serif;padding-left:124px;font-size:16px;line-height:1.85}
+.container{max-width:1250px;padding:0 32px}header{padding:58px 0 48px}
+h1{font-size:clamp(1.8rem,3.2vw,3rem);line-height:1.55;letter-spacing:0;margin:18px auto;max-width:1050px}
+h1 span{font-size:clamp(1.05rem,1.8vw,1.55rem);line-height:1.65;opacity:1}
+.eyebrow{font-weight:700;letter-spacing:.06em;font-size:1rem}.institution-en{font-size:.88rem;opacity:.88}
+.english-title{font:700 clamp(1.1rem,2vw,1.6rem)/1.5 'Lato',sans-serif;max-width:890px;margin:0 auto 24px}
+.event-line{font-weight:700;font-size:clamp(1rem,1.6vw,1.3rem)}.online-badge{display:inline-block;border:1px solid #ffffff88;border-radius:30px;padding:7px 22px;margin:16px 0 0;background:#ffffff15}
+.profile-section{display:grid;grid-template-columns:200px 1fr;align-items:center;gap:44px;margin:48px auto;max-width:850px}
+.profile-image-container{width:180px;height:180px;margin:0}.profile-info-container{display:block;margin:0;text-align:left}.profile-name{font-size:1.7rem;line-height:1.6}.profile-title{font-size:1rem;margin-top:12px;line-height:1.8}
+.split-layout{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin:30px 0}.japanese-side,.english-side{padding:0;min-width:0}.split-layout:before{display:none}
+.content-card,.details{margin-bottom:24px;padding:26px}.content-card h2,.details h2{font-size:1.35rem;margin:0 0 18px}.abstract{padding-left:16px}.abstract p{margin-bottom:1rem}.abstract p:last-child{margin-bottom:0}
+dl{display:grid;grid-template-columns:4em 1fr;gap:9px 14px}dt{font-weight:700;color:#534785}dd{margin:0;min-width:0}.english-side dl{grid-template-columns:4.4em 1fr}.date{font-weight:700;font-size:1.12rem}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}.action{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:10px 18px;background:linear-gradient(120deg,#6a35ce,#3252aa);color:white;text-decoration:none;font-weight:700}.action.secondary{background:#eeebf7;color:#45317a;border:1px solid #d9d2ef}.action:hover{filter:brightness(1.12);color:white}.action.secondary:hover{color:#45317a}
+.feature{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center;margin:30px 0 38px;background:#fff;border:1px solid #dfdcf0;border-radius:16px;overflow:hidden}.feature img{display:block;width:100%;height:330px;object-fit:cover}.feature.egypt img{object-fit:contain;background:#191722}.feature-copy{padding:28px 30px 28px 0}.feature h2{font-size:1.35rem;margin:0 0 16px}.feature figcaption{font-size:.75rem;line-height:1.7;margin-top:20px;color:#4b5563}.tag{font-size:.85rem;margin:0 5px 8px 0}
+footer{margin-top:24px;padding:32px 0 38px}footer p{margin:8px 0}footer a{color:inherit;text-decoration:underline}.footer-content{font-size:.9rem}.mail{overflow-wrap:anywhere}.small{font-size:.85rem}
+a:focus-visible{outline:3px solid #db9e0b;outline-offset:4px}.skip{position:fixed;top:-70px;left:20px;z-index:2000;background:white;padding:8px}.skip:focus{top:8px}
+.dock-item{width:72px;height:72px}.icon-text{font-size:.9rem}.dock-item:hover{transform:translateX(3px) scale(1.05)}
+@media(max-width:1100px){body{padding-left:104px}.mac-dock{left:12px;padding:10px 7px}.dock-item{width:62px;height:62px}.container{padding:0 22px}.split-layout{gap:24px}.profile-section{gap:28px}.feature{gap:24px}.feature-copy{padding-right:20px}.content-card,.details{padding:22px}}
+@media(max-width:800px){body{padding-left:0;padding-bottom:94px}.mac-dock{left:50%;top:auto;bottom:12px;transform:translateX(-50%);padding:8px 12px;flex-direction:row}.dock-container{flex-direction:row;gap:12px}.dock-divider{display:none}.dock-item{width:58px;height:54px;border-radius:12px}.dock-tooltip{display:none}.dock-item:hover{transform:translateY(-3px)}.split-layout{grid-template-columns:1fr}.english-side{border-top:1px solid #d9d2ef;margin:0;padding-top:24px}.profile-section{grid-template-columns:150px 1fr;margin:32px 0;gap:24px}.profile-image-container{width:140px;height:140px}.profile-name{font-size:1.4rem}.profile-title{font-size:.88rem}.feature{grid-template-columns:1fr;gap:0}.feature-copy{padding:24px}.feature img{height:280px}header{padding:36px 0}.container{padding:0 20px}}
+@media(max-width:440px){.profile-section{grid-template-columns:1fr;text-align:center;gap:20px}.profile-image-container{margin:0 auto}.profile-info-container{text-align:center}.content-card,.details{padding:20px}dl{gap:8px}.institution-en{font-size:.75rem}h1{padding:0}.feature img{height:250px}.actions .action{flex:1;white-space:nowrap}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(max-width:440px){.dock-container{gap:6px}.dock-item{width:52px}.mac-dock{padding:8px}}body{padding-left:112px;font-family:'Lato','BIZ UDPGothic','Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic',Meiryo,sans-serif}.series-nav{position:fixed;left:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;padding:10px;background:#ffffffed;border:1px solid #dfd8ef;border-radius:16px;box-shadow:0 8px 24px #35206622;z-index:1000}.series-nav a{display:flex;width:64px;min-height:56px;align-items:center;justify-content:center;border-radius:10px;color:#50338b;text-decoration:none;font-size:15px;font-weight:700}.series-nav a:hover,.series-nav a[aria-current]{background:#623cb3;color:white}.series-nav a:focus-visible{outline:3px solid #cc9400;outline-offset:2px}@media(max-width:800px){body{padding-left:0;padding-bottom:90px}.series-nav{left:50%;top:auto;bottom:10px;transform:translateX(-50%);flex-direction:row;gap:4px;padding:6px}.series-nav a{width:54px;min-height:52px;font-size:14px}}</style></head>
+<body><a class="skip" href="#main">本文へ</a><nav class="series-nav" aria-label="講演会ナビゲーション"><a href="/seminar1/">第1回</a><a href="/seminar2/">第2回</a><a href="/seminars/3/" aria-current="page">第3回</a><a href="/seminars/4/">第4回</a><a href="/seminars/">一覧</a></nav>
+<header><div class="header-grid" aria-hidden="true"></div><div class="tsukuba-emblem" aria-hidden="true"></div><div class="header-gradient-glow" aria-hidden="true"></div><div class="container header-content"><p class="eyebrow">第3回 筑波大学人文社会系公開講演会</p><p class="institution-en" lang="en">Public Lecture · Institute of Humanities and Social Sciences, University of Tsukuba</p><h1>言語の未来を築くのは誰か<span>先住民言語の再活性化におけるUnicodeからAIまで</span></h1><p class="english-title" lang="en">Who Gets to Build the Future of a Language? From Unicode to AI in Indigenous Language Revitalization</p><p class="event-line">2026年11月6日（金）　16:45–18:00 JST</p><p class="online-badge">対面＋オンライン参加可 <span lang="en">/ In person &amp; online</span></p></div></header>
+<main id="main" class="container"><section class="profile-section" aria-label="講師紹介"><div class="profile-image-container"><div class="profile-image"><img src="speaker.jpg" alt="Mark Turin" width="400" height="400"></div><div class="profile-glow" aria-hidden="true"></div><div class="profile-decor" aria-hidden="true"></div><div class="profile-decor" aria-hidden="true"></div></div><div class="profile-info-container"><p class="small">講師 / SPEAKER</p><h2 class="profile-name">マーク・トゥーリン<br><span lang="en">Mark Turin</span></h2><p class="profile-title">ブリティッシュ・コロンビア大学 准教授<br><span lang="en">Associate Professor, University of British Columbia</span></p></div></section>
+<div class="split-layout"><section class="japanese-side" lang="ja" aria-label="日本語のご案内">
+<div class="details"><h2>講演詳細</h2><dl><dt>日付</dt><dd>2026年11月6日（金）</dd><dt>時間</dt><dd>16:45–18:00（日本時間）</dd><dt>会場</dt><dd>筑波大学 中央図書館集会室</dd><dt>形式</dt><dd>対面＋オンライン</dd><dt>言語</dt><dd>英語</dd></dl></div>
+<div class="content-card"><h2>講演について</h2><div class="abstract"><p>先住民言語コミュニティとの協働を踏まえ、UnicodeからAIまでの技術と、言語の未来を支えるデジタル基盤について考えます。誰が基盤を築き、誰の知識が反映されるのかという問いを中心に、コミュニティの主体性と言語の再活性化を取り上げます。</p></div><a href="https://www.jinsha.tsukuba.ac.jp/node/505">人文社会系の講演案内 →</a></div>
+<div class="content-card"><h2>参加について</h2><p><strong>オンラインでも参加できます。</strong></p><p>オンラインの参加方法・接続先は、宮川 創までお問い合わせください。</p><div class="actions"><a class="action" href="mailto:miyagawa.so.kb@u.tsukuba.ac.jp">参加方法を問い合わせる</a><a class="action secondary" href="poster.pdf">ポスター PDF</a></div></div></section><section class="english-side" lang="en" aria-label="English information">
+<div class="details"><h2>Lecture details</h2><dl><dt>Date</dt><dd>Friday, November 6, 2026</dd><dt>Time</dt><dd>16:45–18:00 JST</dd><dt>Venue</dt><dd>Central Library Meeting Room, University of Tsukuba</dd><dt>Format</dt><dd>In person &amp; online</dd><dt>Language</dt><dd>English</dd></dl></div>
+<div class="content-card"><h2>About the lecture</h2><div class="abstract"><p>A lecture on Indigenous language revitalization, digital infrastructure, and the questions of knowledge and agency raised by technologies from Unicode to AI.</p></div><a href="https://www.jinsha.tsukuba.ac.jp/node/505">Official lecture information →</a></div>
+<div class="content-card"><h2>How to participate</h2><p><strong>Online participation is available.</strong></p><p>Please contact So Miyagawa for online access details.</p><div class="actions"><a class="action" href="mailto:miyagawa.so.kb@u.tsukuba.ac.jp">Contact organizer</a><a class="action secondary" href="poster.pdf">Poster PDF</a></div></div></section></div><figure class="feature "><img src="hero.jpg" alt="本から光の線と点が広がるイラスト" loading="lazy"><div class="feature-copy"><h2>言語の未来とデジタル技術</h2><p lang="en">Language futures & digital technologies</p><div><span class="tag">先住民言語</span><span class="tag">Unicode</span><span class="tag">AI</span><span class="tag">言語の再活性化</span></div><figcaption>講演テーマをイメージしたイラスト</figcaption></div></figure></main>
+<footer><div class="container footer-content"><p><strong>主催</strong>　筑波大学人文社会系<br><strong>協力</strong>　筑波大学一般言語学研究会</p><p lang="en">Organized by the Institute of Humanities and Social Sciences, University of Tsukuba<br>With cooperation from Tsukuba General Linguistics Colloquium</p><p><strong>お問い合わせ / Contact</strong>　宮川 創 / So Miyagawa<br><a class="mail" href="mailto:miyagawa.so.kb@u.tsukuba.ac.jp">miyagawa.so.kb@u.tsukuba.ac.jp</a></p><p><a href="/seminar1/">第1回</a> · <a href="/seminar2/">第2回</a></p><p class="small">更新：2026年9月27日</p></div></footer></body></html>

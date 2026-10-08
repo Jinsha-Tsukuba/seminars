@@ -393,13 +393,20 @@ header h1 span {
 .online-badge span { font-weight: 400; color: var(--ink-soft); }
 
 /* 講師名などヘッダー内の補助見出し */
-header h4, header h5 {
-  margin: 0 0 6px;
+.speaker-line {
+  margin: 0 0 20px;
+  font-family: var(--font-display);
+  font-size: clamp(1.02rem, 1.8vw, 1.26rem);
   font-weight: 600;
+  line-height: 1.6;
 }
-header h4 { font-size: clamp(1.05rem, 2vw, 1.3rem); }
-header h5 { font-size: .98rem; font-weight: 400; color: rgba(255, 255, 255, .82); }
-header .subtitle { margin-top: 6px; }
+.speaker-line span {
+  display: block;
+  font-family: var(--font-body);
+  font-size: .8em;
+  font-weight: 400;
+  color: rgba(255, 255, 255, .82);
+}
 header a:not(.action) { color: #fff; }
 
 /* ==========================================================================
@@ -487,7 +494,7 @@ header a:not(.action) { color: #fff; }
   line-height: 1.4;
   color: var(--purple-ink);
 }
-.profile-name span { display: block; font-size: .72em; color: var(--blue); }
+.profile-name span { font-size: .72em; color: var(--blue); }
 
 .profile-title {
   margin: 0;
@@ -495,7 +502,7 @@ header a:not(.action) { color: #fff; }
   line-height: 1.75;
   color: var(--ink-soft);
 }
-.profile-title span { display: block; font-size: .92em; color: var(--ink-faint); }
+.profile-title span { font-size: .92em; color: var(--ink-faint); }
 
 /* ==========================================================================
    2 言語並列レイアウト
@@ -710,7 +717,7 @@ header .button010 a { box-shadow: 0 10px 28px rgba(0, 0, 0, .3); }
 .feature figcaption { margin-top: 18px; font-size: .78rem; line-height: 1.7; color: var(--ink-faint); }
 
 /* 2/ の共催ロゴ列 */
-.sponsors { margin: 0 0 40px; }
+.sponsors { margin: 0 0 40px; text-align: center; }
 .sponsors p { margin: 0; }
 .sponsors img {
   height: 74px;
@@ -742,6 +749,9 @@ header .button010 a { box-shadow: 0 10px 28px rgba(0, 0, 0, .3); }
   border-color: var(--line-strong);
   box-shadow: var(--shadow-lg);
 }
+
+/* 過去回のカードは帯を落ち着かせ、今年の回を目立たせる */
+.cards article.past .band { background: linear-gradient(118deg, var(--purple-ink), var(--purple-deep)); }
 
 .band {
   display: flex;
@@ -821,7 +831,7 @@ header .button010 a { box-shadow: 0 10px 28px rgba(0, 0, 0, .3); }
 .link:hover::after { transform: translateX(110%); }
 
 /* 節見出し：紫の縦線でリズムをつける */
-main > h2, main > section > h2 {
+main > h2, main > section:not(.profile-section) > h2 {
   margin: 48px 0 24px;
   padding-left: 16px;
   border-left: 4px solid var(--purple);

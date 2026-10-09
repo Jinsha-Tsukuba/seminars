@@ -25,7 +25,8 @@
 
   /* ---------------------------------------------------------------- ドック */
   function initDock() {
-    var dock = document.querySelector('.dock-container');
+    var panel = document.querySelector('.mac-dock');
+    var dock = panel && panel.querySelector('.dock-container');
     if (!dock) return;
     var items = Array.prototype.slice.call(dock.querySelectorAll('.dock-item'));
     if (!items.length) return;
@@ -36,22 +37,28 @@
       return getComputedStyle(dock).flexDirection.indexOf('row') === 0;
     }
 
+    var pending = null;
+
     function reset() {
+      pending = null;
       items.forEach(function (item) {
         item.style.transform = '';
         item.style.zIndex = '';
       });
     }
 
-    function magnify(point) {
-      if (reduce.matches) return;
+    function apply(point) {
       var h = isHorizontal();
-      items.forEach(function (item) {
+      // 測定と書き込みは分ける。混ぜると項目ごとにレイアウトが走る
+      var proximities = items.map(function (item) {
         var rect = item.getBoundingClientRect();
         var distance = h
           ? Math.abs(point.clientX - (rect.left + rect.width / 2))
           : Math.abs(point.clientY - (rect.top + rect.height / 2));
-        var proximity = Math.max(0, 90 - distance);
+        return Math.max(0, 90 - distance);
+      });
+      items.forEach(function (item, i) {
+        var proximity = proximities[i];
         if (proximity > 0) {
           var scale = 1 + (proximity / 90) * 0.34;
           item.style.transform = h
@@ -65,10 +72,25 @@
       });
     }
 
-    dock.addEventListener('mousemove', magnify);
-    dock.addEventListener('mouseleave', reset);
-    dock.addEventListener('touchmove', function (e) { magnify(e.touches[0]); });
-    dock.addEventListener('touchend', reset);
+    var flush = onFrame(function () {
+      if (pending) { apply(pending); pending = null; }
+    });
+
+    function magnify(point) {
+      if (reduce.matches || !point) return;
+      pending = { clientX: point.clientX, clientY: point.clientY };
+      flush();
+    }
+
+    // 受けるのは内側の .dock-container ではなくパネル全体。
+    // ガラスの余白（padding）の上でポインタが外れたことにならないように
+    panel.addEventListener('mousemove', magnify);
+    panel.addEventListener('mouseleave', reset);
+    panel.addEventListener('touchmove', function (e) {
+      if (e.touches && e.touches.length) magnify(e.touches[0]);
+    });
+    panel.addEventListener('touchend', reset);
+    panel.addEventListener('touchcancel', reset);
     window.addEventListener('resize', reset);
   }
 
@@ -99,27 +121,57 @@
     );
     if (!targets.length) return;
 
+    // 出現し終えたら .reveal を外す。付けたままだと will-change による合成層と
+    // .75s の遷移が残り、カード本来のホバー（.35s）や枠線の描画を狂わせる
+    function show(el) {
+      el.classList.add('is-visible');
+      var done = function (e) {
+        if (e.target !== el || e.propertyName !== 'transform') return;
+        el.removeEventListener('transitionend', done);
+        el.classList.remove('reveal', 'from-left', 'from-right');
+      };
+      el.addEventListener('transitionend', done);
+    }
+
+    var observerRan = false;
+
     var observer = new IntersectionObserver(function (entries) {
+      observerRan = true;
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
+        var el = entry.target;
+        observer.unobserve(el);
+        // 段差は transition-delay ではなくクラス付与を遅らせてつける。
+        // inline の transition-delay はその後のホバーにも効いてしまうため
+        var wait = Number(el.getAttribute('data-reveal-delay')) || 0;
+        if (wait) setTimeout(function () { show(el); }, wait);
+        else show(el);
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
 
-    Array.prototype.forEach.call(targets, function (el, i) {
+    var watched = [];
+    Array.prototype.forEach.call(targets, function (el) {
+      // 入れ子の対象（.content-card の中の .qr など）は親の出現に任せる。
+      // 二重に transform と opacity がかかり、中身だけ別に動いてしまうため
+      if (el.parentElement && el.parentElement.closest('.reveal')) return;
       el.classList.add('reveal');
       // 2 言語並列は、日本語面は左から・英語面は右から差し込む
       if (el.closest && el.closest('.japanese-side')) el.classList.add('from-left');
       else if (el.closest && el.closest('.english-side')) el.classList.add('from-right');
-      el.style.transitionDelay = (i % 3) * 80 + 'ms';
+      el.setAttribute('data-reveal-delay', (watched.length % 3) * 80);
+      watched.push(el);
       observer.observe(el);
     });
 
-    // 保険：.reveal は opacity:0 なので、何かの理由で observer が働かなくても
-    // 3 秒後には必ず表示されるようにしておく（内容が消えたままにならない）
+    // 保険：.reveal は opacity:0 なので、observer が一度も動かなかったときだけ
+    // 3 秒後に全部表示する（内容が消えたままにならない）。
+    // observer が動いているなら触らない：触るとスクロール連動の出現が死ぬ
     setTimeout(function () {
-      Array.prototype.forEach.call(targets, function (el) { el.classList.add('is-visible'); });
+      if (observerRan) return;
+      observer.disconnect();
+      watched.forEach(function (el) {
+        el.classList.remove('reveal', 'from-left', 'from-right');
+      });
     }, 3000);
   }
 

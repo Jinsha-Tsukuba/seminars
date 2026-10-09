@@ -173,7 +173,6 @@ strong, b { font-weight: 700; color: var(--purple-ink); }
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
   padding: 11px 9px;
   border-radius: var(--radius-lg);
   background: linear-gradient(155deg, rgba(255, 255, 255, .94), rgba(243, 238, 255, .80));
@@ -186,19 +185,25 @@ strong, b { font-weight: 700; color: var(--purple-ink); }
     inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
-/* ガラスの上を光がゆっくり通過する */
+/* ガラスの上を光がゆっくり通過する。
+   .mac-dock に overflow は掛けない（ツールチップと項目の拡大が切れるため）。
+   光は要素をはみ出さないよう、背景の位置だけを動かして内側に閉じ込める */
 .mac-dock::after {
   content: '';
   position: absolute;
-  inset: -40% -10%;
+  inset: 0;
   pointer-events: none;
+  border-radius: inherit;
   background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, .85) 50%, transparent 62%);
+  background-repeat: no-repeat;
+  background-size: 100% 320%;
+  background-position: 0 210%;
   animation: sheen 7s ease-in-out infinite;
 }
 
 @keyframes sheen {
-  0%, 62% { transform: translateY(-120%); }
-  86%, 100% { transform: translateY(120%); }
+  0%, 62%   { background-position: 0 210%; }
+  86%, 100% { background-position: 0 -110%; }
 }
 
 .dock-container { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 8px; }

@@ -185,6 +185,15 @@ strong, b { font-weight: 700; color: var(--purple-ink); }
     inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
+/* 読み込み時に左からそっと現れる。transform は translateY(-50%) を含めて書く（縦中央寄せを崩さない） */
+@media (min-width: 861px) {
+  .mac-dock { animation: dock-in .9s .15s var(--ease) both; }
+}
+@keyframes dock-in {
+  from { opacity: 0; transform: translateY(-50%) translateX(-28px) scale(.96); }
+  to   { opacity: 1; transform: translateY(-50%); }
+}
+
 /* ガラスの上を光がゆっくり通過する。
    .mac-dock に overflow は掛けない（ツールチップと項目の拡大が切れるため）。
    光は要素をはみ出さないよう、背景の位置だけを動かして内側に閉じ込める */
@@ -219,8 +228,12 @@ strong, b { font-weight: 700; color: var(--purple-ink); }
   background: rgba(106, 53, 206, .07);
   color: var(--purple-deep);
   text-decoration: none;
-  transition: transform .3s var(--ease-back), background .25s var(--ease), color .25s var(--ease), box-shadow .25s var(--ease);
+  /* 拡大・移動（transform）は JS が毎フレーム補間するので、ここでは遷移させない。
+     CSS の遷移を残すと JS の書き込みと遷移が競合して、カーソルを動かすたびにガタつく */
+  transform-origin: left center;
+  transition: background .25s var(--ease), color .25s var(--ease), box-shadow .25s var(--ease);
 }
+.mac-dock.is-magnifying .dock-item { will-change: transform; }
 
 .dock-item:hover { background: rgba(106, 53, 206, .16); color: var(--purple-deep); }
 
@@ -390,6 +403,26 @@ header::before {
   opacity: .22;
   mix-blend-mode: overlay;
   background-image: var(--noise);
+}
+
+/* 第4回（エジプト）：ヘッダー背景のナイル川（assets/nile.svg）。南（上流）を左、地中海を右にした地図ふうの図版。
+   川面のきらめきの動きは SVG 内の <style> に持たせてある */
+.header-nile {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("nile.svg") right center / cover no-repeat;
+  will-change: transform;
+}
+/* 文字が載る左側だけを少し沈めて可読性を保つ（川そのものは右半分でしっかり見せる） */
+.header-nile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(64rem 40rem at 24% 42%, rgba(26, 11, 53, .62), transparent 68%),
+    linear-gradient(90deg, rgba(26, 11, 53, .38), transparent 46%);
 }
 
 /* 下端の発光ライン */
@@ -952,7 +985,13 @@ header .button010 a { box-shadow: 0 12px 30px rgba(0, 0, 0, .34); }
   transition: transform .8s var(--ease);
 }
 .feature:hover img { transform: scale(1.05); }
-.feature.egypt img { object-fit: contain; background: var(--purple-ink); }
+/* ロゼッタ・ストーンの写真は余白を残して収め、その背面にもナイル川を敷く */
+.feature.egypt img {
+  object-fit: contain;
+  padding: 38px 60px;
+  /* 写真の周りの余白にデルタ付近（ピラミッド〜分流）が見えるよう、やや右寄りで切り取る */
+  background: var(--purple-ink) url("nile.svg") 74% center / cover no-repeat;
+}
 .feature.egypt:hover img { transform: none; }
 .feature-copy { padding: 34px 36px; align-self: center; }
 .feature-copy h2 { margin: 0 0 6px; font-size: 1.4rem; font-weight: 600; color: var(--purple-ink); }
@@ -1256,7 +1295,7 @@ footer .small { color: rgba(255, 255, 255, .6); }
   }
   .mac-dock::after { animation: none; }
   .dock-container { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 7px; row-gap: 7px; }
-  .dock-item { width: 58px; height: 48px; }
+  .dock-item { width: 58px; height: 48px; transform-origin: center bottom; }
   .dock-item.active::after { right: 50%; top: auto; bottom: 5px; margin: 0 -2.5px 0 0; }
   .dock-divider { display: none; }
   .dock-tooltip { display: none; }

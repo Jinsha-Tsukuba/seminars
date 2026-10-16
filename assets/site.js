@@ -31,67 +31,128 @@
     var items = Array.prototype.slice.call(dock.querySelectorAll('.dock-item'));
     if (!items.length) return;
 
+    var RADIUS = 150;      // カーソルの影響が届く距離（px）
+    var GROWTH = 0.42;     // 真下の項目の最大拡大率（1 + GROWTH 倍）
+    var SPREAD = 0.45;     // 隣の項目をどれだけ押し広げるか（1 = 重なりゼロ、小さいほど控えめ）
+    var EASE = 0.22;       // 1 フレームで目標へ寄せる割合（小さいほど重く、大きいほど機敏）
+
     // 横並び（スマートフォン）か縦並び（デスクトップ）かは
     // ブレークポイント直書きではなく実際の flex-direction から判定する
     function isHorizontal() {
       return getComputedStyle(dock).flexDirection.indexOf('row') === 0;
     }
 
-    var pending = null;
+    // 項目ごとの現在値と目標値。transform は CSS で遷移させず、ここで毎フレーム補間する
+    var state = items.map(function () {
+      return { scale: 1, shift: 0, targetScale: 1, targetShift: 0 };
+    });
+    var pointer = null;
+    var running = false;
 
-    function reset() {
-      pending = null;
-      items.forEach(function (item) {
-        item.style.transform = '';
-        item.style.zIndex = '';
+    // 1 から 0 へなめらかに落ちる山なりの重み（コサイン）。
+    // 直線的な減衰だと、隣の項目に移った瞬間に大きさが折れ曲がって見える
+    function weight(distance) {
+      var t = 1 - Math.min(distance, RADIUS) / RADIUS;
+      return 0.5 - 0.5 * Math.cos(Math.PI * t);
+    }
+
+    function computeTargets() {
+      var h = isHorizontal();
+      // 位置は transform の影響を受けない offsetTop/offsetLeft から求める。
+      // getBoundingClientRect は拡大中の値を返すので、測るたびに目標がずれて震える
+      var base = dock.getBoundingClientRect();
+      var centers = items.map(function (item) {
+        return h
+          ? { along: base.left + item.offsetLeft + item.offsetWidth / 2, across: base.top + item.offsetTop + item.offsetHeight / 2 }
+          : { along: base.top + item.offsetTop + item.offsetHeight / 2, across: 0 };
+      });
+      var growths = items.map(function (item, i) {
+        var c = centers[i];
+        var distance = h
+          ? Math.hypot(pointer.clientX - c.along, pointer.clientY - c.across)   // 折り返した行の項目まで膨らまないよう 2 次元で測る
+          : Math.abs(pointer.clientY - c.along);
+        var scale = 1 + GROWTH * weight(distance);
+        state[i].targetScale = scale;
+        return (h ? item.offsetWidth : item.offsetHeight) * (scale - 1);
+      });
+      // 大きくなった項目の分だけ、両隣を外側へ押し出す（Mac のドックと同じ動き）
+      items.forEach(function (item, i) {
+        var shift = 0;
+        for (var k = 0; k < items.length; k++) {
+          if (k < i) shift += growths[k] / 2;
+          else if (k > i) shift -= growths[k] / 2;
+        }
+        state[i].targetShift = shift * SPREAD;
       });
     }
 
-    function apply(point) {
+    function render() {
       var h = isHorizontal();
-      // 測定と書き込みは分ける。混ぜると項目ごとにレイアウトが走る
-      var proximities = items.map(function (item) {
-        var rect = item.getBoundingClientRect();
-        var distance = h
-          ? Math.abs(point.clientX - (rect.left + rect.width / 2))
-          : Math.abs(point.clientY - (rect.top + rect.height / 2));
-        return Math.max(0, 90 - distance);
-      });
-      items.forEach(function (item, i) {
-        var proximity = proximities[i];
-        if (proximity > 0) {
-          var scale = 1 + (proximity / 90) * 0.34;
-          item.style.transform = h
-            ? 'scale(' + scale + ') translateY(-' + proximity / 12 + 'px)'
-            : 'scale(' + scale + ') translateX(' + proximity / 10 + 'px)';
-          item.style.zIndex = String(Math.round(proximity));
-        } else {
+      var settled = true;
+      state.forEach(function (s, i) {
+        s.scale += (s.targetScale - s.scale) * EASE;
+        s.shift += (s.targetShift - s.shift) * EASE;
+        if (Math.abs(s.targetScale - s.scale) > 0.0015 || Math.abs(s.targetShift - s.shift) > 0.15) settled = false;
+        var item = items[i];
+        if (Math.abs(s.scale - 1) < 0.002 && Math.abs(s.shift) < 0.2) {
           item.style.transform = '';
           item.style.zIndex = '';
+          return;
         }
+        var scale = s.scale.toFixed(4);
+        var shift = s.shift.toFixed(2);
+        // 縦並びでは原点が左端（transform-origin）なので、拡大した分だけ右へふくらむ
+        item.style.transform = h
+          ? 'translate3d(' + shift + 'px,0,0) scale(' + scale + ')'
+          : 'translate3d(0,' + shift + 'px,0) scale(' + scale + ')';
+        item.style.zIndex = String(Math.round((s.scale - 1) * 100));
       });
+      return settled;
     }
 
-    var flush = onFrame(function () {
-      if (pending) { apply(pending); pending = null; }
-    });
+    function tick() {
+      if (pointer) computeTargets();
+      var settled = render();
+      if (settled && !pointer) {
+        running = false;
+        state.forEach(function (s) { s.scale = 1; s.shift = 0; });
+        render();
+        panel.classList.remove('is-magnifying');
+        return;
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function start() {
+      if (running) return;
+      running = true;
+      panel.classList.add('is-magnifying');
+      requestAnimationFrame(tick);
+    }
 
     function magnify(point) {
       if (reduce.matches || !point) return;
-      pending = { clientX: point.clientX, clientY: point.clientY };
-      flush();
+      pointer = { clientX: point.clientX, clientY: point.clientY };
+      start();
+    }
+
+    // 離れたら目標を元の大きさへ戻し、補間に任せてゆっくり収める（即座には戻さない）
+    function release() {
+      pointer = null;
+      state.forEach(function (s) { s.targetScale = 1; s.targetShift = 0; });
+      start();
     }
 
     // 受けるのは内側の .dock-container ではなくパネル全体。
     // ガラスの余白（padding）の上でポインタが外れたことにならないように
     panel.addEventListener('mousemove', magnify);
-    panel.addEventListener('mouseleave', reset);
+    panel.addEventListener('mouseleave', release);
     panel.addEventListener('touchmove', function (e) {
       if (e.touches && e.touches.length) magnify(e.touches[0]);
-    });
-    panel.addEventListener('touchend', reset);
-    panel.addEventListener('touchcancel', reset);
-    window.addEventListener('resize', reset);
+    }, { passive: true });
+    panel.addEventListener('touchend', release);
+    panel.addEventListener('touchcancel', release);
+    window.addEventListener('resize', release);
   }
 
   /* ------------------------------------------------------------ 進行バー */
@@ -196,6 +257,7 @@
     var glow = header.querySelector('.header-gradient-glow');
     var grid = header.querySelector('.header-grid');
     var emblem = header.querySelector('.tsukuba-emblem');
+    var nile = header.querySelector('.header-nile');
     var content = header.querySelector('.header-content');
     if (!glow && !grid && !emblem) return;
 
@@ -204,6 +266,7 @@
       if (y > header.offsetHeight + 200) return;   // ヘッダーが画面外なら触らない
       if (grid) grid.style.transform = 'translate3d(0,' + y * 0.18 + 'px,0)';
       if (emblem) emblem.style.translate = '0 ' + y * 0.26 + 'px';
+      if (nile) nile.style.transform = 'translate3d(0,' + y * 0.12 + 'px,0)';
       if (content) {
         content.style.transform = 'translate3d(0,' + y * 0.10 + 'px,0)';
         content.style.opacity = String(Math.max(0, 1 - y / (header.offsetHeight * 0.95)));
